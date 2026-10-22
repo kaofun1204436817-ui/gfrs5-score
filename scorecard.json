@@ -1,0 +1,222 @@
+{
+  "_meta": {
+    "name": "GFRS-5",
+    "full_name": "Gout Functional Risk Score, 5-item version",
+    "version": "1.0",
+    "built": "2026-10-22",
+    "note": "唯一真值文件。Streamlit 版与静态网页版均由此派生，修改分值必须改这里并重跑 03_build_site.py 与 04_校验.py。",
+    "source_table": "08_论文稿/图表_v1.md 表4"
+  },
+  "score": {
+    "age": {
+      "label": "年龄",
+      "unit": "岁",
+      "type": "ordinal",
+      "levels": [
+        {
+          "code": "a1",
+          "label": "<55",
+          "upper": 55,
+          "points": 0
+        },
+        {
+          "code": "a2",
+          "label": "55~64",
+          "upper": 65,
+          "points": 9
+        },
+        {
+          "code": "a3",
+          "label": "65~74",
+          "upper": 75,
+          "points": 17
+        },
+        {
+          "code": "a4",
+          "label": "≥75",
+          "upper": null,
+          "points": 26
+        }
+      ]
+    },
+    "bmi": {
+      "label": "BMI",
+      "unit": "kg/m²",
+      "type": "ordinal",
+      "levels": [
+        {
+          "code": "b1",
+          "label": "<24",
+          "upper": 24,
+          "points": 0
+        },
+        {
+          "code": "b2",
+          "label": "24~27.9",
+          "upper": 28,
+          "points": 4
+        },
+        {
+          "code": "b3",
+          "label": "28~31.9",
+          "upper": 32,
+          "points": 7
+        },
+        {
+          "code": "b4",
+          "label": "≥32",
+          "upper": null,
+          "points": 12
+        }
+      ]
+    },
+    "ncm": {
+      "label": "共病数",
+      "unit": "种",
+      "type": "count",
+      "note": "9 类慢性病之和，不含关节炎（避免与关节炎项重复计分）",
+      "levels": [
+        {
+          "code": "n0",
+          "label": "0",
+          "upper": 1,
+          "points": 0
+        },
+        {
+          "code": "n1",
+          "label": "1",
+          "upper": 2,
+          "points": 6
+        },
+        {
+          "code": "n2",
+          "label": "2",
+          "upper": 3,
+          "points": 13
+        },
+        {
+          "code": "n3",
+          "label": "3",
+          "upper": 4,
+          "points": 19
+        },
+        {
+          "code": "n4",
+          "label": "≥4",
+          "upper": null,
+          "points": 26
+        }
+      ]
+    },
+    "arthritis": {
+      "label": "关节炎",
+      "type": "binary",
+      "levels": [
+        {
+          "code": "ar0",
+          "label": "无",
+          "points": 0
+        },
+        {
+          "code": "ar1",
+          "label": "有",
+          "points": 23
+        }
+      ]
+    },
+    "female": {
+      "label": "性别",
+      "type": "binary",
+      "levels": [
+        {
+          "code": "m0",
+          "label": "男",
+          "points": 0
+        },
+        {
+          "code": "m1",
+          "label": "女",
+          "points": 3
+        }
+      ],
+      "note": "女性 +3 分；该分值来自 NHANES 开发库的性别系数方向（女性风险更高）"
+    }
+  },
+  "total_max": 90,
+  "cuts": {
+    "low_upper_exclusive": 36,
+    "high_lower_exclusive": 58
+  },
+  "risk4": {
+    "intercept": -2.2841,
+    "slope": 0.0387,
+    "formula": "1/(1+exp(-(intercept+slope*score)))",
+    "derived_from": "CHARLS 2011-2020, 4 年 ADL 失能, logistic 再校准",
+    "note": "截距与斜率在 CHARLS 内估计；迁移至其他人群需重新校准"
+  },
+  "strata": [
+    {
+      "code": "low",
+      "label": "低风险",
+      "color": "#1f6f4a",
+      "advice": "常规随访，每年评估一次行走能力与跌倒史。",
+      "observed_4y": 17.5,
+      "observed_9y": 31.8
+    },
+    {
+      "code": "mid",
+      "label": "中风险",
+      "color": "#9a6a12",
+      "advice": "6~12 个月内复评；转介康复评估下肢力量与平衡，排查居家跌倒风险。",
+      "observed_4y": 36.7,
+      "observed_9y": 58.9
+    },
+    {
+      "code": "high",
+      "label": "高风险",
+      "color": "#9c3b2e",
+      "advice": "3 个月内转介康复或老年医学评估；行跌倒风险筛查与助行设备适配评估。",
+      "observed_4y": 50.0,
+      "observed_9y": 72.8
+    }
+  ],
+  "model_card": {
+    "development": "NHANES 2007-2018，6 周期，n=5,765，事件 1,294（22.4%）",
+    "validation": "CHARLS 2011-2020，n=8,977，事件 3,361，中位随访 7 年",
+    "auc_dev": "0.771（95%CI 0.759~0.785）",
+    "cindex_ext": "0.664（95%CI 0.654~0.673）",
+    "cindex_ipcw": "0.693",
+    "auc_time4": "0.685",
+    "increment": "外部 C 指数：年龄+性别 0.636 → 加 BMI 与共病 0.647 → 加关节炎 0.668",
+    "variables": "年龄、性别、BMI、共病数、关节炎（均为问诊与体检即可获得，不需实验室检测）"
+  },
+  "examples": [
+    {
+      "tag": "病例 A",
+      "age": 52,
+      "bmi": 23.0,
+      "ncm": 0,
+      "arthritis": 0,
+      "expect_total": 3,
+      "female": 1
+    },
+    {
+      "tag": "病例 B",
+      "age": 66,
+      "bmi": 29.0,
+      "ncm": 2,
+      "arthritis": 1,
+      "expect_total": 60,
+      "female": 0
+    },
+    {
+      "tag": "病例 C",
+      "age": 71,
+      "bmi": 25.0,
+      "ncm": 1,
+      "arthritis": 0,
+      "expect_total": 30,
+      "female": 1
+    }
+  ]
+}

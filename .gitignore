@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# 任何数据文件一律不入库（本仓库不含个体数据）
+*.csv
+*.parquet
+*.xlsx
+*.dta
+*.sav

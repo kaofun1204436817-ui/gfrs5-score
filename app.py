@@ -62,10 +62,24 @@ def stratum_of(total: int) -> dict:
 
 
 st.set_page_config(page_title="GFRS-5 下肢功能风险评分", layout="centered")
+
+
+def md_safe(text: str) -> str:
+    """把区间号 ~ 换成全角波浪号，避免被 Markdown 判成删除线。
+
+    `st.caption` / `st.markdown` / `st.write` 走 GFM 解析，成对的 "~" 会被当作删除线：
+    "0.759~0.785" 因此渲染成被划掉的 "0.759 0.785"，波浪号消失、数字上多一条横线。
+    真值文件（scorecard.json）与论文、网页保持半角 ~ 不变，只在这一层做显示端转义。
+    """
+    return text.replace("~", "～")
+
+
 st.title("GFRS-5 下肢功能风险评分")
 st.caption(
-    "Gout Functional Risk Score · 5 项床旁评分 · 适用于 40 岁及以上痛风或高尿酸血症人群 · "
-    "分值 0~90，越高风险越高"
+    md_safe(
+        "Gout Functional Risk Score · 5 项床旁评分 · 适用于 40 岁及以上痛风或高尿酸血症人群 · "
+        "分值 0~90，越高风险越高"
+    )
 )
 
 with st.form("gfrs"):
@@ -99,7 +113,7 @@ if submitted:
     )
     st.markdown(f"**4 年下肢功能衰退风险估计：{risk4 * 100:.1f}%**（CHARLS 再校准）")
     st.progress(min(total / SC["total_max"], 1.0))
-    st.info(st_["advice"])
+    st.info(md_safe(st_["advice"]))
 
     near = min((CUT_LO, CUT_HI), key=lambda c: abs(total - c))
     if abs(total - near) <= 3:
@@ -110,7 +124,7 @@ if submitted:
 
     with st.expander("分值明细"):
         for name, val, pt in items:
-            st.write(f"{name}（{val}）：{pt} 分")
+            st.write(md_safe(f"{name}（{val}）：{pt} 分"))
         st.write(f"合计：{total} 分")
 
     with st.expander("该分层的实际观察风险（CHARLS）"):
@@ -120,10 +134,12 @@ if submitted:
 M = SC["model_card"]
 st.divider()
 st.caption(
-    f"模型卡：{M['development']}；{M['validation']}。"
-    f"开发库 AUC {M['auc_dev']}；外部 Harrell C 指数 {M['cindex_ext']}，"
-    f"IPCW C 指数 {M['cindex_ipcw']}。变量：{M['variables']}。"
-    f"4 年风险换算系数由 CHARLS 数据估计，迁移至其他人群须重新校准。"
+    md_safe(
+        f"模型卡：{M['development']}；{M['validation']}。"
+        f"开发库 AUC {M['auc_dev']}；外部 Harrell C 指数 {M['cindex_ext']}，"
+        f"IPCW C 指数 {M['cindex_ipcw']}。变量：{M['variables']}。"
+        f"4 年风险换算系数由 CHARLS 数据估计，迁移至其他人群须重新校准。"
+    )
 )
 st.caption(
     "免责声明：本工具仅用于风险分层与随访强度提示，不构成诊断或治疗建议；"

@@ -161,7 +161,7 @@
       "color": "#1f6f4a",
       "advice": "常规随访，每年评估一次行走能力与跌倒史。",
       "observed_4y": 17.5,
-      "observed_9y": 31.8
+      "observed_9y": 30.9
     },
     {
       "code": "mid",
@@ -169,7 +169,7 @@
       "color": "#9a6a12",
       "advice": "6~12 个月内复评；转介康复评估下肢力量与平衡，排查居家跌倒风险。",
       "observed_4y": 36.7,
-      "observed_9y": 58.9
+      "observed_9y": 56.8
     },
     {
       "code": "high",
@@ -177,7 +177,7 @@
       "color": "#9c3b2e",
       "advice": "3 个月内转介康复或老年医学评估；行跌倒风险筛查与助行设备适配评估。",
       "observed_4y": 50.0,
-      "observed_9y": 72.8
+      "observed_9y": 68.9
     }
   ],
   "model_card": {
